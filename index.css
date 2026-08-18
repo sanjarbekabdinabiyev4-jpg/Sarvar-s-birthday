@@ -1,0 +1,676 @@
+﻿/* ═══════════════════════════════════
+   BASE
+═══════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --green:   #00ff66;
+    --green-d: #00cc55;
+    --red:     #ff004c;
+    --cyan:    #00ffff;
+    --bg:      #050505;
+    --bg2:     #020b05;
+    --card-bg: rgba(0,255,102,.04);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--green);
+    font-family: "Courier New", monospace;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* CRT scanlines */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,.018) 0,
+        rgba(255,255,255,.018) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+}
+
+/* ═══════════════════════════════════
+   LAYOUT
+═══════════════════════════════════ */
+#app {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 16px;
+}
+
+/* ═══════════════════════════════════
+   TERMINAL
+═══════════════════════════════════ */
+.terminal, .birthday { width: min(860px, 100%); }
+
+.terminal {
+    min-height: 480px;
+    border: 1px solid var(--green);
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0,255,102,.15), inset 0 0 60px rgba(0,255,102,.03);
+    background: rgba(0,0,0,.94);
+    margin-top: 20px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--green);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    letter-spacing: .08em;
+}
+
+.topbar-status { color: var(--green); animation: blink 1.4s infinite; }
+
+#terminalText { line-height: 2; white-space: pre-wrap; font-size: clamp(13px,2.2vw,15px); }
+
+.cursor { animation: blink .7s infinite; }
+
+/* ═══════════════════════════════════
+   BUTTONS
+═══════════════════════════════════ */
+button {
+    font-family: inherit;
+    background: var(--green);
+    color: #000;
+    border: 0;
+    padding: 12px 20px;
+    margin-top: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: .05em;
+    transition: box-shadow .25s, transform .15s;
+    touch-action: manipulation;
+}
+
+button:hover  { box-shadow: 0 0 20px var(--green); }
+button:active { transform: scale(.97); }
+
+/* ═══════════════════════════════════
+   HIDDEN
+═══════════════════════════════════ */
+.hidden { display: none !important; }
+
+/* ═══════════════════════════════════
+   BIRTHDAY
+═══════════════════════════════════ */
+.birthday {
+    text-align: center;
+    animation: appear .8s ease;
+    padding-top: 24px;
+    padding-bottom: 40px;
+}
+
+/* ── GLITCH ── */
+.glitch {
+    position: relative;
+    font-size: clamp(40px, 10vw, 96px);
+    font-weight: bold;
+    letter-spacing: .06em;
+    display: inline-block;
+    animation: glitch-main 4s infinite;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.glitch::before {
+    color: var(--red);
+    animation: glitch-a 4s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 38%, 0 38%);
+}
+
+.glitch::after {
+    color: var(--cyan);
+    animation: glitch-b 4s infinite;
+    clip-path: polygon(0 62%, 100% 62%, 100% 100%, 0 100%);
+}
+
+.birthday h1 {
+    font-size: clamp(20px, 5vw, 46px);
+    margin: 12px 0 6px;
+    text-shadow: 0 0 12px var(--green);
+}
+
+.subtitle { opacity: .7; font-size: clamp(12px, 2.5vw, 15px); }
+
+/* ── MUSIC BAR ── */
+.music-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 16px;
+    padding: 10px 18px;
+    border: 1px solid var(--green);
+    background: rgba(0,255,102,.06);
+    border-radius: 4px;
+}
+
+.music-btn {
+    margin-top: 0;
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: 3px;
+}
+
+.music-wave { display: flex; align-items: flex-end; gap: 3px; height: 22px; }
+
+.music-wave span {
+    display: block;
+    width: 4px;
+    background: var(--green);
+    border-radius: 2px;
+    animation: wave 0.8s ease-in-out infinite;
+}
+
+.music-wave span:nth-child(1) { animation-delay: 0s;    animation-duration: .6s; }
+.music-wave span:nth-child(2) { animation-delay: .1s;   animation-duration: .9s; }
+.music-wave span:nth-child(3) { animation-delay: .2s;   animation-duration: .7s; }
+.music-wave span:nth-child(4) { animation-delay: .15s;  animation-duration: .85s; }
+.music-wave span:nth-child(5) { animation-delay: .05s;  animation-duration: .65s; }
+
+.music-wave.paused span { animation-play-state: paused; height: 4px !important; }
+
+/* ── CAKE BOX & BIG CAKE ── */
+.cake-box, .secret {
+    margin-top: 28px;
+    padding: 20px;
+    border: 1px solid var(--green);
+    background: var(--card-bg);
+    text-align: left;
+}
+
+.cake-box h2, .secret h2 {
+    font-size: clamp(14px, 3vw, 18px);
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(0,255,102,.2);
+    padding-bottom: 8px;
+}
+
+.cake-container {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    cursor: pointer;
+    background: #000;
+    box-shadow: 0 0 25px rgba(0, 255, 102, 0.25);
+    transition: box-shadow .35s ease, transform .35s ease;
+    margin: 10px 0;
+}
+
+.cake-container:hover {
+    box-shadow: 0 0 40px rgba(0, 255, 102, 0.6);
+    transform: translateY(-2px);
+}
+
+.cake-container img {
+    width: 100%;
+    max-height: 480px;
+    object-fit: cover;
+    display: block;
+    filter: saturate(1.05) contrast(1.1);
+    transition: transform .5s ease, filter .5s ease;
+}
+
+.cake-container:hover img {
+    transform: scale(1.03);
+    filter: saturate(1.15) contrast(1.15);
+}
+
+.cake-glow-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid var(--green);
+    color: var(--green);
+    padding: 6px 14px;
+    font-size: clamp(11px, 2vw, 13px);
+    border-radius: 4px;
+    letter-spacing: .05em;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0,255,102,.3);
+}
+
+/* ── SURPRISE TRIGGER BTN ── */
+.surprise-trigger {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px;
+    font-size: 15px;
+    background: transparent;
+    border: 2px solid var(--green);
+    color: var(--green);
+    letter-spacing: .1em;
+    animation: pulse-border 2s infinite;
+}
+
+.surprise-trigger:hover {
+    background: rgba(0,255,102,.12);
+    box-shadow: 0 0 28px var(--green);
+}
+
+/* ── SECRET ── */
+.hint { font-size: 13px; opacity: .7; margin: 6px 0 14px; }
+
+.input-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+input {
+    background: #000;
+    border: 1px solid var(--green);
+    color: var(--green);
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    flex: 1 1 180px;
+    min-width: 0;
+    transition: box-shadow .2s;
+}
+
+input:focus { box-shadow: 0 0 12px rgba(0,255,102,.4); }
+
+#unlockBtn { margin-top: 0; flex-shrink: 0; }
+
+#secretResult { margin-top: 18px; min-height: 30px; }
+
+.success {
+    font-size: clamp(13px, 2.5vw, 18px);
+    font-weight: bold;
+    line-height: 1.8;
+    animation: fadeIn .6s ease;
+}
+
+.denied {
+    color: var(--red);
+    font-size: 14px;
+    animation: glitch-shake .3s ease;
+}
+
+/* ═══════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════ */
+#lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+#lightbox.active { display: flex; }
+
+#lightbox-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.93);
+}
+
+#lb-img {
+    position: relative;
+    max-width: 92vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border: 2px solid var(--green);
+    box-shadow: 0 0 40px rgba(0,255,102,.4);
+    z-index: 1;
+    border-radius: 4px;
+    animation: fadeIn .25s ease;
+}
+
+#lb-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-size: 20px;
+    padding: 8px 14px;
+    cursor: pointer;
+    z-index: 2;
+    margin-top: 0;
+    transition: background .2s;
+}
+
+#lb-close:hover { background: rgba(255,0,76,.25); }
+
+/* ═══════════════════════════════════
+   FINAL SURPRISE OVERLAY
+═══════════════════════════════════ */
+.surprise-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    background: rgba(0,0,0,0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 20px 10px;
+}
+
+#confettiCanvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#surpriseInner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 20px;
+    max-width: min(700px, 96vw);
+    margin: auto;
+}
+
+.gift-emoji {
+    font-size: clamp(70px, 16vw, 130px);
+    display: block;
+    transform-origin: center bottom;
+}
+
+.gift-emoji.shaking { animation: giftShake .5s ease infinite; }
+.gift-emoji.opening { animation: giftOpen .6s ease forwards; }
+
+.surprise-msg {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .8s ease, transform .8s ease;
+}
+
+.surprise-msg.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.surprise-title {
+    font-size: clamp(22px, 6vw, 56px);
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px var(--green), 0 0 40px var(--green);
+    animation: glitch-main 3s infinite;
+}
+
+.surprise-sub {
+    font-size: clamp(14px, 3.5vw, 22px);
+    margin-bottom: 20px;
+    opacity: .9;
+}
+
+.typing-area {
+    font-size: clamp(13px, 2.5vw, 16px);
+    line-height: 1.9;
+    text-align: left;
+    background: rgba(0,255,102,.04);
+    border: 1px solid rgba(0,255,102,.2);
+    padding: 16px;
+    border-radius: 4px;
+    min-height: 60px;
+    white-space: pre-wrap;
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+.typing-cursor { animation: blink .7s infinite; }
+
+.made-with {
+    margin-top: 16px;
+    font-size: 13px;
+    opacity: .6;
+    letter-spacing: .05em;
+}
+
+/* ── 2ND SECRET GIFT SECTION ── */
+.second-gift-section {
+    margin-top: 25px;
+    padding: 18px;
+    border: 2px dashed var(--green);
+    background: rgba(0, 255, 102, 0.05);
+    border-radius: 8px;
+    animation: fadeIn .8s ease;
+    box-shadow: 0 0 25px rgba(0,255,102,0.25);
+}
+
+.glitch-notice {
+    font-size: clamp(13px, 2.8vw, 17px);
+    font-weight: bold;
+    color: #ffcc00;
+    margin-bottom: 15px;
+    letter-spacing: 0.05em;
+    animation: pulse-notice 1.2s infinite;
+}
+
+.second-gift-text {
+    font-size: clamp(15px, 3vw, 20px);
+    font-weight: bold;
+    color: var(--cyan);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    text-shadow: 0 0 10px rgba(0,255,255,0.4);
+}
+
+.troll-btn {
+    background: #ff004c;
+    color: #fff;
+    font-size: clamp(14px, 2.8vw, 18px);
+    padding: 14px 28px;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    animation: trollBtnPulse 1.2s infinite;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 5px;
+}
+
+.troll-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #ff004c;
+}
+
+.troll-reveal {
+    margin-top: 20px;
+    animation: trollPopIn .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.troll-emoji {
+    font-size: clamp(70px, 16vw, 120px);
+    display: inline-block;
+    filter: drop-shadow(0 0 20px rgba(255,0,76,0.6));
+    animation: trollShake .8s infinite alternate;
+}
+
+.troll-caption {
+    font-size: clamp(18px, 4vw, 26px);
+    font-weight: bold;
+    color: #ff004c;
+    margin-top: 10px;
+    text-shadow: 0 0 15px rgba(255,0,76,0.8);
+}
+
+.troll-sub {
+    font-size: clamp(12px, 2.5vw, 14px);
+    opacity: 0.85;
+    color: var(--green);
+    margin-top: 6px;
+}
+
+.close-surprise-btn {
+    margin-top: 25px;
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    padding: 10px 24px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.close-surprise-btn:hover {
+    background: rgba(0,255,102,0.15);
+    box-shadow: 0 0 15px var(--green);
+}
+
+/* ═══════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════ */
+@keyframes blink { 50% { opacity: 0; } }
+
+@keyframes appear {
+    from { opacity: 0; transform: scale(.96); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-notice {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.02); opacity: 0.85; text-shadow: 0 0 12px #ffcc00; }
+}
+
+@keyframes trollBtnPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(255,0,76,0.5); transform: scale(1); }
+    50% { box-shadow: 0 0 25px rgba(255,0,76,0.9); transform: scale(1.03); }
+}
+
+@keyframes trollPopIn {
+    0% { opacity: 0; transform: scale(0.3) rotate(-15deg); }
+    70% { transform: scale(1.15) rotate(5deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes trollShake {
+    0% { transform: rotate(-6deg) scale(1); }
+    100% { transform: rotate(6deg) scale(1.06); }
+}
+
+@keyframes glitch-main {
+    0%, 90%, 100% { text-shadow: 3px 0 var(--red), -3px 0 var(--cyan); }
+    91%            { text-shadow: -4px 0 var(--red), 4px 0 var(--cyan); clip-path: inset(20% 0 30% 0); }
+    93%            { text-shadow: 4px 0 var(--red), -4px 0 var(--cyan); clip-path: inset(50% 0 10% 0); transform: translate(-2px,0); }
+    95%            { text-shadow: none; clip-path: none; transform: none; }
+}
+
+@keyframes glitch-a {
+    0%, 89%, 100% { transform: none; opacity: 1; }
+    90%            { transform: translate(-3px,0); opacity: .8; }
+    92%            { transform: translate(3px,0); }
+    94%            { transform: none; opacity: 1; }
+}
+
+@keyframes glitch-b {
+    0%, 89%, 100% { transform: none; opacity: 1; }
+    91%            { transform: translate(3px,0); opacity: .8; }
+    93%            { transform: translate(-3px,0); }
+    95%            { transform: none; opacity: 1; }
+}
+
+@keyframes glitch-shake {
+    0%,100% { transform: translate(0,0); }
+    20%     { transform: translate(-4px,0); }
+    40%     { transform: translate(4px,0); }
+    60%     { transform: translate(-2px,0); }
+    80%     { transform: translate(2px,0); }
+}
+
+@keyframes wave {
+    0%,100% { height: 4px; }
+    50%     { height: 18px; }
+}
+
+@keyframes pulse-border {
+    0%,100% { box-shadow: 0 0 6px rgba(0,255,102,.2); }
+    50%     { box-shadow: 0 0 22px rgba(0,255,102,.6); }
+}
+
+@keyframes giftShake {
+    0%,100% { transform: rotate(0deg) scale(1); }
+    25%     { transform: rotate(-8deg) scale(1.04); }
+    75%     { transform: rotate(8deg) scale(1.04); }
+}
+
+@keyframes giftOpen {
+    0%   { transform: scale(1) rotate(0deg); }
+    30%  { transform: scale(1.15) rotate(-6deg); }
+    60%  { transform: scale(1.3) rotate(8deg); }
+    100% { transform: scale(0) rotate(20deg); opacity: 0; }
+}
+
+/* ── prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+/* ═══════════════════════════════════
+   RESPONSIVE – MOBILE
+═══════════════════════════════════ */
+@media (max-width: 600px) {
+
+    #app { padding: 10px; align-items: flex-start; }
+
+    .terminal { min-height: 400px; padding: 14px; margin-top: 10px; }
+
+    .birthday { padding-top: 14px; }
+
+    .cake-container img { max-height: 320px; }
+
+    .input-row { flex-direction: column; align-items: stretch; }
+
+    input, #unlockBtn { width: 100%; }
+
+    .music-bar { flex-wrap: wrap; gap: 8px; }
+
+    .surprise-title { font-size: clamp(18px, 7vw, 32px); }
+
+    .surprise-overlay { padding: 15px 8px; }
+}
+
+@media (max-width: 360px) {
+    .glitch { font-size: 34px; }
+    .birthday h1 { font-size: 17px; }
+    .cake-container img { max-height: 260px; }
+}
+
+/* ── Landscape on small phones ── */
+@media (max-height: 500px) and (orientation: landscape) {
+    .terminal { min-height: 300px; }
+    .cake-container img { max-height: 220px; }
+    .gift-emoji { font-size: 60px; }
+}

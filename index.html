@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Happy Birthday, Sarvar! 🎂</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+
+<div id="app">
+
+    <!-- HACKER TERMINAL -->
+    <main class="terminal" id="terminal">
+        <div class="topbar">
+            <span>SARVAR_SYSTEM v17.0</span>
+            <span class="topbar-status">● SECURE MODE</span>
+        </div>
+        <div id="terminalText"></div>
+        <span class="cursor">█</span>
+        <button id="runBtn" class="hidden">▶ RUN BIRTHDAY.EXE</button>
+    </main>
+
+
+    <!-- BIRTHDAY SECTION -->
+    <section id="birthday" class="birthday hidden">
+
+        <div class="glitch" data-text="SARVAR">SARVAR</div>
+        <h1>17 YOSHGA KIRDING! 💀🎂</h1>
+        <p class="subtitle">Birthday protocol successfully activated.</p>
+
+        <!-- MUSIC CONTROL -->
+        <div class="music-bar" id="musicBar">
+            <button id="musicBtn" class="music-btn">🎵 Music ON</button>
+            <div class="music-wave" id="musicWave">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+        <audio id="bgMusic" loop preload="auto">
+            <source src="./music.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- BIG CAKE DISPLAY -->
+        <div class="cake-box">
+            <h2>🎂 BIRTHDAY_CAKE.exe</h2>
+
+            <div class="cake-container" id="cakeContainer">
+                <img id="mainCakeImg" src="./img/cake.jpg" alt="Sarvar 17 Birthday Cake" loading="lazy">
+                <div class="cake-glow-tag">🍰 17th Special Birthday Cake</div>
+            </div>
+
+            <!-- FINAL SURPRISE TRIGGER -->
+            <button id="surpriseBtn" class="surprise-trigger hidden">
+                🎁 Open Final Surprise
+            </button>
+        </div>
+
+        <!-- SECRET PASSWORD -->
+        <div class="secret">
+            <h2>🔐 SECRET_FILE</h2>
+            <p>Maxfiy faylni ochish uchun parolni top.</p>
+            <p class="hint">💡 Ishora: Biz nechanchi yildan beri do'stmiz?</p>
+            <div class="input-row">
+                <input id="password" type="password" placeholder="Enter password..." autocomplete="off">
+                <button id="unlockBtn">UNLOCK 🔓</button>
+            </div>
+            <div id="secretResult"></div>
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+    <div id="lightbox-overlay"></div>
+    <img id="lb-img" src="" alt="Cake">
+    <button id="lb-close" aria-label="Yopish">&#10005;</button>
+</div>
+
+
+<!-- FINAL SURPRISE OVERLAY -->
+<div id="surprise" class="surprise-overlay hidden">
+    <canvas id="confettiCanvas"></canvas>
+    <div id="surpriseInner">
+        <div id="giftEmoji" class="gift-emoji">🎁</div>
+
+        <div id="surpriseMsg" class="surprise-msg">
+            <div class="surprise-title glitch" data-text="HAPPY BIRTHDAY!">HAPPY BIRTHDAY!</div>
+            <div class="surprise-sub">🎉 TUG'ILGAN KUNING MUBORAK, SARVAR! 🎂</div>
+            <div id="surpriseTyping" class="typing-area"></div>
+            <div class="made-with">❤️ Made with friendship &amp; a lot of 😂</div>
+        </div>
+
+        <!-- 2ND SECRET GIFT -->
+        <div id="secondGiftSection" class="second-gift-section hidden">
+            <div class="glitch-notice" id="secondGiftNotice">
+                ⚠️ WAIT... THERE IS ONE MORE GIFT FOR YOU! 🎁👀
+            </div>
+
+            <div class="second-gift-content" id="secondGiftContent">
+                <p class="second-gift-text">Yana bir yoshga ulg'ayganing bilan tabriklayman! 😂</p>
+                <button id="trollGiftBtn" class="troll-btn">
+                    🎁 Mening ustimga bos!
+                </button>
+                <div id="trollReveal" class="troll-reveal hidden">
+                    <div class="troll-emoji">🖕</div>
+                    <div class="troll-caption">😂 SURPRISE! HAHAHAHA 💀🔥</div>
+                    <div class="troll-sub">// Do'stlikning eng yuqori darajasi 😂❤️</div>
+                </div>
+            </div>
+        </div>
+
+        <button id="closeSurpriseBtn" class="close-surprise-btn hidden">✖ Yopish</button>
+    </div>
+</div>
+
+
+<script src="./index.js"></script>
+</body>
+</html>
