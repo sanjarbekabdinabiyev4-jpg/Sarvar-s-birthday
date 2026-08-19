@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 /* ═══════════════════════════════════════════════════════════
    SARVAR BIRTHDAY GIFT  –  index.js
@@ -404,6 +404,9 @@ function trollConfettiBurst() {
 unlockBtn.addEventListener("click", handleUnlock);
 passwordInput.addEventListener("keydown", e => { if (e.key === "Enter") handleUnlock(); });
 
+let bgConfettiRAF = null;
+let bgConfettiParticles = [];
+
 function handleUnlock() {
     const val = passwordInput.value.trim();
 
@@ -451,34 +454,86 @@ No uninstall option available 😂</small>
         // Show surprise button
         if (surpriseBtn) surpriseBtn.classList.remove("hidden");
 
-        // Mini confetti burst
-        confettiBurst();
+        // Smooth falling emojis like secret gift, but falls down and disappears
+        triggerPasswordConfetti();
 
     } else {
         secretResult.innerHTML = `<span class="denied">ACCESS DENIED 😂 Parol noto'g'ri!</span>`;
     }
 }
 
-// small confetti burst
-function confettiBurst() {
-    const emojis = ["🎉","🎂","😂","⭐","🎊","✨"];
-    for (let i = 0; i < 60; i++) {
-        const p = document.createElement("span");
-        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        p.style.cssText = `
-            position:fixed;
-            left:${Math.random()*100}vw;
-            top:-30px;
-            font-size:${16+Math.random()*18}px;
-            z-index:9997;
-            pointer-events:none;
-            transition:top 2.5s linear, transform 2.5s linear;
-        `;
-        document.body.appendChild(p);
-        requestAnimationFrame(() => {
-            p.style.top = "110vh";
-            p.style.transform = `rotate(${Math.random()*720}deg)`;
-        });
-        setTimeout(() => p.remove(), 2800);
+// Smooth canvas falling emojis that fall from top and disappear
+function triggerPasswordConfetti() {
+    const canvas = document.getElementById("bgConfettiCanvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    if (bgConfettiRAF) {
+        cancelAnimationFrame(bgConfettiRAF);
+        bgConfettiRAF = null;
     }
+
+    const dpr = window.devicePixelRatio || 1;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+
+    const emojis = ["🎉", "🎂", "⭐", "🎊", "💚", "✨", "😂", "🔥", "🍰", "🥳", "🎁", "🚀"];
+    bgConfettiParticles = [];
+    const count = 90;
+
+    for (let i = 0; i < count; i++) {
+        bgConfettiParticles.push({
+            x: Math.random() * width,
+            y: -(Math.random() * height * 0.85 + 30),
+            vy: 2.2 + Math.random() * 3.5,
+            vx: (Math.random() - 0.5) * 2.2,
+            rot: Math.random() * 360,
+            rotV: (Math.random() - 0.5) * 5,
+            emoji: emojis[Math.floor(Math.random() * emojis.length)],
+            size: 20 + Math.random() * 18
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        let activeCount = 0;
+
+        for (let i = 0; i < bgConfettiParticles.length; i++) {
+            const p = bgConfettiParticles[i];
+
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rot += p.rotV;
+
+            if (p.y < height + 60) {
+                activeCount++;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate((p.rot * Math.PI) / 180);
+                ctx.font = `${p.size}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(p.emoji, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        if (activeCount > 0) {
+            bgConfettiRAF = requestAnimationFrame(draw);
+        } else {
+            ctx.clearRect(0, 0, width, height);
+            bgConfettiRAF = null;
+            bgConfettiParticles = [];
+        }
+    }
+
+    bgConfettiRAF = requestAnimationFrame(draw);
 }

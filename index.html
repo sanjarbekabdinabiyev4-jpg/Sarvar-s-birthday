@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
+
+<canvas id="bgConfettiCanvas" class="bg-confetti-canvas"></canvas>
 
 <div id="app">
 
@@ -18,7 +20,7 @@
         </div>
         <div id="terminalText"></div>
         <span class="cursor">█</span>
-        <button id="runBtn" class="hidden">▶ RUN BIRTHDAY.EXE</button>
+        <button id="runBtn" class="hidden">▶ RUN BIRTHDAY</button>
     </main>
 
 
@@ -42,7 +44,7 @@
 
         <!-- BIG CAKE DISPLAY -->
         <div class="cake-box">
-            <h2>🎂 BIRTHDAY_CAKE.exe</h2>
+            <h2>🎂 BIRTHDAY-CAKE</h2>
 
             <div class="cake-container" id="cakeContainer">
                 <img id="mainCakeImg" src="./img/cake.jpg" alt="Sarvar 17 Birthday Cake" loading="lazy">
@@ -57,9 +59,9 @@
 
         <!-- SECRET PASSWORD -->
         <div class="secret">
-            <h2>🔐 SECRET_FILE</h2>
+            <h2>🔐 SECRET-FILE</h2>
             <p>Maxfiy faylni ochish uchun parolni top.</p>
-            <p class="hint">💡 Ishora: Biz nechanchi yildan beri do'stmiz?</p>
+            <p class="hint">💡 Ishora: Biz nechanchi yildan beri do'stmiz? Yani senlardi sinfinga nechanchi yil o'tganman</p>
             <div class="input-row">
                 <input id="password" type="password" placeholder="Enter password..." autocomplete="off">
                 <button id="unlockBtn">UNLOCK 🔓</button>
